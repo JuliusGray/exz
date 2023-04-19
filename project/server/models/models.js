@@ -31,7 +31,7 @@ const Products = sequelize.define("Products", {
 const Orders = sequelize.define("Orders", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   code: { type: DataTypes.STRING, allowNull: false },
-  date: { type: DataTypes.DATE, allowNull: false },
+  date: { type: DataTypes.DATE },
   customer_id: {
     type: DataTypes.INTEGER,
     references: { model: "Enterprises", key: "id" },

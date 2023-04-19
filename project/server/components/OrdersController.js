@@ -2,11 +2,10 @@ const { Orders } = require("../models/models");
 
 class OrdCtrl {
   async create(req, res) {
-    const { code, date, customer_id, seller_id } = req.body;
+    const { code, customer_id, seller_id } = req.body;
     try {
       const newOrders = await Orders.create({
         code,
-        date,
         customer_id,
         seller_id,
       });
