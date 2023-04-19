@@ -1,84 +1,40 @@
-const Products = require("../models/models");
+const { Products } = require("../models/models");
 
 class ProdCtrl {
   async create(req, res) {
+    const { code, name, short_name, productgroups_id } = req.body;
     try {
-      const { code, name, short_name, productgroups_id } = req.body;
-      const product = await Products.create({
+      const newProduct = await Products.create({
         code,
         name,
         short_name,
         productgroups_id,
       });
-      return res.json(product);
-    } catch (e) {
-      console.error(e);
-      return res.json(e.message);
+
+      res.status(201).json(newProduct);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
     }
   }
 
-  // async getAll(req, res) {
-  //   try {
-      
-  //     return res.json(products);
-  //   } catch (e) {
-  //     return res.json(e.message);
-  //   }
-  // }
+  async getAll(req, res) {
+    try {
+      const products = await Products.findAll();
+      res.status(200).json(products);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  }
 
-  // async getOne(req, res) {
-  //   const { id } = req.params;
-  //   const product = await Products.findOne({
-  //     where: { id },
-  //     include: [{ model: Description, as: "info" }],
-  //   });
-  //   return res.json(product);
-  // }
-
-  // async deleteProduct(req, res) {
-  //   try {
-  //     const { id } = req.params;
-  //     const product = await Products.findOne({ where: { id } });
-  //     if (!product) {
-  //       throw ApiError.notFound(`Продукт не `);
-  //     }
-  //     await product.destroy();
-  //     return res.json({ message: `Product with id ${id} was deleted` });
-  //   } catch (e) {
-  //     return res.json(e.message);
-  //   }
-  // }
-
-  // async update(req, res) {
-  //   try {
-  //     const { id } = req.params;
-  //     const { name, price, categoryId, description } = req.body;
-  //     const product = await Products.findOne({ where: { id } });
-  //     if (!product) {
-  //       throw ApiError.notFound("Продукт не найден");
-  //     }
-  //     if (name) {
-  //       product.name = name;
-  //     }
-  //     if (price) {
-  //       product.price = price;
-  //     }
-  //     if (categoryId) {
-  //       product.categoryId = categoryId;
-  //     }
-  //     if (description) {
-  //       const info = await Description.findOrCreate({
-  //         where: { productId: id },
-  //         defaults: { value: description },
-  //       });
-  //       product.infoId = info.id;
-  //     }
-  //     await product.save();
-  //     return res.json(product);
-  //   } catch (e) {
-  //     return res.json(e.message);
-  //   }
-  // }
+  async delete(req, res) {
+    const { id } = req.params;
+    try {
+      const product = await Products.destroy({ where: { id } });
+      res.status(200).json(`Товар удален из базы данных`);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  }
 }
 
 module.exports = new ProdCtrl();
